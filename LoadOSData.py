@@ -25,8 +25,10 @@ def LoadOSData(project_name, bReload=False):
       
     # Load data from different sets
     if project_name.startswith("WisBreast"): 
-
-        data = pd.read_excel('./InputData/WisconsinBreast.xlsx') 
+        try:
+            data = pd.read_excel('./InputData/WisconsinBreast.xlsx') 
+        except FileNotFoundError:
+            data = pd.read_excel('./WisconsinBreast.xlsx') 
         data.drop('id', axis=1, inplace=True)
         data.rename(columns={"diagnosis": "Target"}, inplace=True)
         data['Target'] = (data['Target']=='M')
@@ -55,7 +57,10 @@ def LoadOSData(project_name, bReload=False):
         return (X, Y)
     
     elif project_name.startswith("Census"): 
-        data = pd.read_csv('./InputData/Census_Income.csv') 
+        try: 
+            data = pd.read_csv('./InputData/Census_Income.csv') 
+        except FileNotFoundError:
+            data = pd.read_csv('./Census_Income.csv') 
         filtered_data = data[
         (data['age'].astype(int) > 16) & 
         (data['capital-gain'].astype(int) > 100) & 
