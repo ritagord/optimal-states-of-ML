@@ -17,8 +17,8 @@ import torch
 from Models_ver2 import MLPTorch, LogisticRegressionTorch
 import Plot_Weights
 
-#X, Y = LoadOSData.LoadOSData("WisBreast")
-X, Y = LoadOSData.LoadOSData("CensusOrth")
+X, Y = LoadOSData.LoadOSData("WisBreastOrth")
+#X, Y = LoadOSData.LoadOSData("CensusOrth")
 X = (X-X.mean())/X.std()
 
 
@@ -45,8 +45,8 @@ manual_weights = [
 for i in range(num_models):
     perturbed_weights = []
     for weights, biases in manual_weights:
-        weight_perturbation = np.random.randn(*weights.shape) * 10**(-3)
-        bias_perturbation = np.random.randn(*biases.shape) * 10**(-3)
+        weight_perturbation = np.random.randn(*weights.shape) * 10**(-2)
+        bias_perturbation = np.random.randn(*biases.shape) * 10**(-2)
         new_weights = weights + weight_perturbation
         new_biases = biases + bias_perturbation
         
@@ -54,7 +54,7 @@ for i in range(num_models):
 
     model = MLPTorch(manual_init=True, manual_weights=perturbed_weights)
     
-    weights = model.fit(X_train, Y_train)
+    weights = model.fit(X_train, Y_train, epochs = 100)
     
     all_weights_history.append(weights)
     all_final_weights.append(weights[-1])
@@ -137,7 +137,7 @@ plt.show()
 
 model = MLPTorch(manual_init=True, manual_weights=perturbed_weights, loss_monitoring = True, optimizer_type = "Adam")
    
-weights, losses = model.fit(X_train, Y_train, epochs=500)
+weights, losses = model.fit(X_train, Y_train, epochs=100)
 weights_reshaped = weights.reshape(weights.shape[0], -1)  # (epochs, features)
 weight_gradients = np.gradient(weights_reshaped, axis=0)
 
@@ -162,7 +162,7 @@ plt.show()
 
 model = MLPTorch(manual_init=True, manual_weights=perturbed_weights, loss_monitoring = True, optimizer_type = "SGD")
    
-weights, losses = model.fit(X_train, Y_train, epochs=500)
+weights, losses = model.fit(X_train, Y_train, epochs=100)
 weights_reshaped = weights.reshape(weights.shape[0], -1)  # (epochs, features)
 weight_gradients = np.gradient(weights_reshaped, axis=0)
 
@@ -187,8 +187,8 @@ plt.show()
 
 
 
-#X, Y = LoadOSData.LoadOSData("WisBreast")
-X, Y = LoadOSData.LoadOSData("CensusOrth")
+X, Y = LoadOSData.LoadOSData("WisBreast")
+#X, Y = LoadOSData.LoadOSData("CensusOrth")
 X = (X-X.mean())/X.std()
 
 
